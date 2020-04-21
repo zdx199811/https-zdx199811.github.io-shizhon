@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>准时的时钟</title>
+		<style type="text/css">
+			*{
+				margin: 0;
+				padding: 0;
+				list-style: none;
+			}		
+			canvas{
+				/* border: 1px red solid; */
+				/* 变成块级元素 */
+				display: block;
+				/* 居中：只能对块级元素有效 */
+				margin: 60px auto;
+			}
+		</style>
+	</head>
+	<body>
+		<!-- 画布 -->
+		<canvas id=canvas width="700" height="700"></canvas>
+		<!-- 接下来在画布上绘制，使用JavaScript -->
+		<script type="text/javascript">
+			//获取画布
+			var canvas = document.getElementById("canvas");
+			//要获取上下文(画笔)
+			var ctx = canvas.getContext("2d");
+			//播放
+			play();
+			function play(){
+				//保存画布
+				ctx.save();
+				//清除历史
+				ctx.clearRect(0,0,canvas.width,canvas.height);
+				//平移坐标到(0,0)的位置
+				ctx.translate(canvas.width/2,canvas.height/2);
+				//绘制表盘
+				biaopan();
+				//动起来
+				run();
+				//还原画布
+				ctx.restore();
+				//延时器
+				setTimeout('play()',1000);
+			}
+			//绘制表盘
+			function biaopan(){
+				//绘制圆圈
+				//开启路径
+				ctx.beginPath();
+				
+				//设置颜色
+				ctx.strokeStyle = "cadetblue";
+				//设置线宽
+				ctx.lineWidth = 5;
+				//设置圆
+				ctx.arc(0,0,348,0,2*Math.PI,false);
+				//绘制
+				ctx.stroke();
+				
+				//绘制时钟刻度
+				for(var i=0;i<12;i++){
+					//开启路径
+					ctx.beginPath();
+					//设置颜色
+					ctx.strokeStyle = 'green';
+					//设置线宽
+					ctx.lineWidth = 5;
+					//设置落笔的位置
+					ctx.moveTo(0,-308);
+					//设置起笔的位置
+					ctx.lineTo(0,-338);
+					//绘制
+					ctx.stroke();
+					//旋转
+					ctx.rotate(2*Math.PI/12);
+				}
+				
+				//绘制分钟刻度
+				for(var i=0;i<60;i++){
+					//开启路径
+					ctx.beginPath();
+					//设置颜色
+					ctx.strokeStyle = 'green';
+					//设置线宽
+					ctx.lineWidth = 2;
+					//设置落笔的位置
+					ctx.moveTo(0,-322);
+					//设置起笔的位置
+					ctx.lineTo(0,-338);
+					//绘制
+					ctx.stroke();
+					//旋转
+					ctx.rotate(2*Math.PI/60);
+				}
+			}
+			function run(){
+				//获取系统当前时间
+				var date = new Date();
+				// date.getDay();
+				var h = date.getHours();
+				var m = date.getMinutes();
+				var s = date.getSeconds();
+				
+				//绘制时钟指针
+				//保存画布
+				ctx.save();
+				//旋转
+				ctx.rotate(2*Math.PI/12 *h + (2*Math.PI/60 *m +(2*Math.PI/60 * s)/60)/12);
+				//开启路径
+				ctx.beginPath();
+				//设置颜色
+				ctx.strokeStyle = 'gray';
+				//设置线宽
+				ctx.lineWidth = 8;
+				//设置落笔的位置
+				ctx.moveTo(0,30);
+				//设置起笔的位置
+				ctx.lineTo(0,-210);
+				//绘制
+				ctx.stroke();
+				//还原画布
+				ctx.restore();
+				
+				//绘制分钟指针
+				//保存画布
+				ctx.save();
+				//旋转
+				ctx.rotate(2*Math.PI/60 *m +(2*Math.PI/60 * s)/60);
+				//开启路径
+				ctx.beginPath();
+				//设置颜色
+				ctx.strokeStyle = 'blue';
+				//设置线宽
+				ctx.lineWidth = 5;
+				//设置落笔的位置
+				ctx.moveTo(0,40);
+				//设置起笔的位置
+				ctx.lineTo(0,-250);
+				//绘制
+				ctx.stroke();
+				//还原画布
+				ctx.restore();
+				
+				
+				//绘制秒钟指针
+				//保存画布
+				ctx.save();
+				//旋转
+				ctx.rotate(2*Math.PI/60 * s);
+				//开启路径
+				ctx.beginPath();
+				//设置颜色
+				ctx.strokeStyle = 'red';
+				//设置线宽
+				ctx.lineWidth = 2;
+				//设置落笔的位置
+				ctx.moveTo(0,50);
+				//设置起笔的位置
+				ctx.lineTo(0,-290);
+				//绘制
+				ctx.stroke();
+				//还原画布
+				ctx.restore();
+				
+				//绘制中心圆点
+				//开启路径
+				ctx.beginPath();
+				//设置描边颜色
+				ctx.strokeStyle = 'yellow';
+				//设置填充颜色
+				ctx.fillStyle = 'darkgray';
+				//线宽
+				ctx.lineWidth = 2;
+				//设置圆
+				ctx.arc(0,0,10,0,2*Math.PI,false);
+				//绘制
+				ctx.stroke();
+				//填充
+				ctx.fill();
+			}
+		</script>
+	</body>
+</html>
